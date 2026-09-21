@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Un ramo de girasoles con mensajes para el Día de las Flores Amarillas.">
+<meta name="robots" content="noindex">
+<title>Ramo de Flores Amarillas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Nunito:wght@400;600;700&display=swap">
+<style id="ramo-css">
+:root{
+  --night:#082A28; --night-2:#10473F; --glow:#1E6B5E;
+  --sun:#FFC72C; --sun-deep:#F2A007; --sun-pale:#FFE58A;
+  --mint:#8FF0DF; --cream:#FFF6DE; --paper:#FFF8E9; --paper-2:#EAD3AE;
+  --ink:#3A2415; --ink-soft:#6B4A2E; --ribbon:#E98A8A;
+  --ui:#0E3F3B; --ui-line:rgba(255,246,222,.18);
+  --font-display:'Great Vibes','Brush Script MT','Segoe Script',cursive;
+  --font-serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --font-ui:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:dark;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{box-sizing:border-box;height:100%}
+body{height:100%;margin:0;background:var(--night);color:var(--cream);font-family:var(--font-ui);font-size:16px;-webkit-font-smoothing:antialiased}
+[hidden]{display:none!important}
+body.modal-open{overflow:hidden}
+*,*::before,*::after{box-sizing:inherit}
+
+#app{position:relative;min-height:100%;display:flex;flex-direction:column;overflow:hidden;
+  background:radial-gradient(120% 70% at 50% 92%,var(--glow) 0%,var(--night-2) 42%,var(--night) 100%)}
+
+/* cielo: luciérnagas */
+.sky{position:absolute;inset:0;pointer-events:none;z-index:0}
+.spark{position:absolute;border-radius:50%;background:#FFE787;box-shadow:0 0 6px 2px rgba(255,231,135,.5);opacity:0;
+  animation:twinkle var(--dur) ease-in-out var(--dl) infinite alternate}
+@keyframes twinkle{from{opacity:.05;transform:scale(.6)}to{opacity:.9;transform:scale(1)}}
+
+/* encabezado */
+.head{position:relative;z-index:2;text-align:center;padding:clamp(18px,4vh,40px) 16px 0;animation:fadeUp .9s ease .1s both}
+.eyebrow{margin:0 0 6px;font:600 .78rem/1 var(--font-ui);letter-spacing:.2em;text-transform:uppercase;color:var(--mint);opacity:.85}
+.title{margin:0;font:400 clamp(2.3rem,10vw,3.8rem)/1.05 var(--font-display);color:var(--sun);text-wrap:balance;
+  text-shadow:0 0 22px rgba(255,199,44,.45),0 0 2px rgba(255,229,138,.6),0 2px 0 rgba(0,0,0,.25)}
+.sub{margin:6px 0 0;font:italic 500 clamp(1.05rem,4.2vw,1.3rem)/1.3 var(--font-serif);color:var(--mint)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* escenario */
+.stage{position:relative;z-index:1;flex:1 1 auto;min-height:280px}
+.bouquet{position:absolute;inset:0;margin:auto;max-width:440px;animation:rise .9s cubic-bezier(.2,.7,.2,1) .2s both}
+.bouquet svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;transform-origin:50% 100%;animation:sway 7s ease-in-out 3.2s infinite}
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes sway{0%{transform:rotate(0)}25%{transform:rotate(-1.2deg)}75%{transform:rotate(1.2deg)}100%{transform:rotate(0)}}
+
+.stem{fill:none;stroke:#2E7D4F;stroke-width:7;stroke-linecap:round;stroke-dasharray:1;animation:grow 1s cubic-bezier(.45,0,.2,1) var(--d) both}
+@keyframes grow{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.leafg{transform-box:fill-box;transform-origin:left center;animation:pop .6s cubic-bezier(.34,1.56,.64,1) var(--d) both}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.leaf{fill:url(#leafG)}
+.vein{stroke:#1F6B43;stroke-width:1.2;fill:none;opacity:.7}
+.bloom{transform-box:fill-box;transform-origin:center;animation:bloom .9s cubic-bezier(.34,1.56,.64,1) var(--d) both;cursor:pointer;outline:none}
+@keyframes bloom{from{transform:scale(0) rotate(-40deg)}to{transform:scale(1) rotate(0)}}
+.flower:hover,.flower:focus-visible{filter:drop-shadow(0 0 10px rgba(255,220,90,.8))}
+.crease{stroke:rgba(200,110,10,.35);stroke-width:1;fill:none}
+
+/* mariposas */
+.bfly{position:absolute;width:34px;height:24px;z-index:4;pointer-events:none;overflow:visible;
+  animation:drift var(--dur) ease-in-out infinite alternate,appear .8s ease var(--dl) both}
+@keyframes drift{0%{transform:translate(0,0) scale(var(--s)) rotate(-8deg)}
+  50%{transform:translate(calc(var(--dx)*.5),calc(var(--dy)*.5 - 14px)) scale(var(--s)) rotate(6deg)}
+  100%{transform:translate(var(--dx),var(--dy)) scale(var(--s)) rotate(-4deg)}}
+@keyframes appear{from{opacity:0}to{opacity:1}}
+.wing{fill:var(--sun);stroke:#D9860F;stroke-width:1;transform-box:fill-box;animation:flap var(--fl) ease-in-out infinite alternate}
+.wing.l{transform-origin:right center}
+.wing.r{transform-origin:left center}
+@keyframes flap{from{transform:scaleX(1)}to{transform:scaleX(.25)}}
+.bfly .body{stroke:#3A2415;stroke-width:2.2;stroke-linecap:round}
+
+/* pie */
+.foot{position:relative;z-index:2;display:flex;justify-content:center;padding:14px 16px 22px}
+.btn-letter{font:700 .95rem/1 var(--font-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);
+  background:linear-gradient(180deg,var(--sun-pale),var(--sun));border:0;border-radius:999px;padding:14px 26px;
+  box-shadow:0 6px 20px rgba(255,199,44,.35),inset 0 1px 0 rgba(255,255,255,.6);cursor:pointer;
+  animation:fadeUp .7s ease 3s both;transition:transform .2s,box-shadow .2s}
+.btn-letter:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(255,199,44,.45)}
+.btn-letter:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
+
+/* carta */
+.letter{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px}
+.letter-backdrop{position:absolute;inset:0;background:rgba(4,26,24,.72);backdrop-filter:blur(3px);animation:fade .25s ease both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.card{position:relative;width:min(100%,380px);background:var(--paper);color:var(--ink);border-radius:6px;padding:38px 28px 22px;
+  box-shadow:0 30px 60px rgba(0,0,0,.45),0 0 0 1px rgba(0,0,0,.06);transform:rotate(-1.5deg);
+  animation:cardIn .45s cubic-bezier(.34,1.4,.64,1) both;
+  background-image:linear-gradient(var(--paper) 0 64px,transparent 64px),repeating-linear-gradient(0deg,transparent 0 27px,rgba(58,36,21,.08) 27px 28px)}
+@keyframes cardIn{from{opacity:0;transform:rotate(4deg) scale(.7)}to{opacity:1;transform:rotate(-1.5deg) scale(1)}}
+.tape{position:absolute;top:-12px;left:50%;width:110px;height:28px;transform:translateX(-50%) rotate(-3deg);
+  background:rgba(255,214,90,.55);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.counter{margin:0 0 12px;font:700 .7rem/1 var(--font-ui);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);text-align:center}
+.msg{margin:0;font:italic 500 clamp(1.35rem,5.2vw,1.65rem)/1.35 var(--font-serif);text-align:center;text-wrap:balance;
+  min-height:3.6em;display:flex;align-items:center;justify-content:center;overflow-wrap:anywhere}
+.msg.long{font-size:clamp(1.08rem,4.3vw,1.3rem);text-wrap:pretty}
+.msg.swap{animation:msgIn .35s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.sign{margin:14px 0 0;text-align:right;font:400 1.7rem/1 var(--font-display);color:var(--sun-deep)}
+.nav{display:flex;align-items:center;justify-content:space-between;margin-top:18px;gap:10px}
+.nav-btn{width:40px;height:40px;border-radius:50%;border:1px solid rgba(58,36,21,.25);background:transparent;color:var(--ink);
+  font:400 1.6rem/1 var(--font-serif);cursor:pointer;flex:0 0 auto}
+.nav-btn:hover{background:rgba(255,199,44,.25)}
+.nav-btn:focus-visible,.dot:focus-visible,.close:focus-visible{outline:2px solid var(--sun-deep);outline-offset:2px}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(58,36,21,.2);border:0;padding:0;cursor:pointer}
+.dot.on{background:var(--sun-deep)}
+.close{position:absolute;top:6px;right:8px;width:32px;height:32px;border:0;background:transparent;color:var(--ink-soft);
+  font:400 1.5rem/1 var(--font-serif);cursor:pointer;border-radius:50%}
+
+/* editor (solo lo ve quien puede editar) */
+.edit-btn{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:15;width:44px;height:44px;border-radius:50%;
+  border:1px solid var(--ui-line);background:rgba(8,42,40,.75);color:var(--cream);display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(4px)}
+.edit-btn:hover{background:rgba(16,71,63,.9)}
+.edit-btn:focus-visible{outline:2px solid var(--sun);outline-offset:2px}
+.sheet{position:fixed;inset:0;z-index:30;display:flex;align-items:flex-end;justify-content:center;background:rgba(4,26,24,.6)}
+.sheet form{width:min(100%,520px);max-height:92%;overflow:auto;background:var(--ui);color:var(--cream);border-radius:18px 18px 0 0;
+  padding:20px 20px calc(24px + env(safe-area-inset-bottom,0px));box-shadow:0 -20px 50px rgba(0,0,0,.4);
+  animation:sheetIn .35s cubic-bezier(.2,.7,.2,1) both;display:flex;flex-direction:column;gap:14px}
+@keyframes sheetIn{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.sheet h2{margin:0;font:700 1.1rem/1.2 var(--font-ui)}
+.sheet label{display:flex;flex-direction:column;gap:6px;font:600 .78rem/1 var(--font-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--mint)}
+.sheet small{font-weight:400;text-transform:none;letter-spacing:0;color:rgba(255,246,222,.65)}
+.sheet input,.sheet textarea{font:400 1rem/1.4 var(--font-ui);color:var(--ink);background:var(--paper);border:1px solid transparent;border-radius:10px;padding:10px 12px;width:100%}
+.sheet input:focus-visible,.sheet textarea:focus-visible{outline:2px solid var(--sun);outline-offset:1px}
+.sheet textarea{resize:vertical;min-height:72px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font:700 .9rem/1 var(--font-ui);border-radius:999px;padding:12px 20px;border:1px solid var(--ui-line);background:transparent;color:var(--cream);cursor:pointer}
+.btn.primary{background:var(--sun);color:var(--ink);border-color:transparent}
+.btn:focus-visible{outline:2px solid var(--sun);outline-offset:2px}
+.btn[disabled]{opacity:.6;cursor:default}
+.status{margin:0;font:400 .85rem/1.4 var(--font-ui);color:var(--mint);min-height:1.2em}
+.toast{position:fixed;left:50%;bottom:calc(72px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:25;
+  width:min(calc(100% - 32px),420px);margin:0;padding:12px 16px;border-radius:12px;background:rgba(8,42,40,.92);color:var(--cream);
+  font:400 .9rem/1.4 var(--font-ui);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.4);border:1px solid var(--ui-line)}
+.hint{margin:0;font:400 .8rem/1.4 var(--font-ui);color:rgba(255,246,222,.65)}
+
+@media (prefers-reduced-motion:reduce){
+  .head,.bouquet,.bouquet svg,.stem,.leafg,.bloom,.btn-letter,.bfly,.wing,.spark,.card,.letter-backdrop,.sheet form,.msg.swap{animation:none!important}
+  .spark{opacity:.6}
+}
+</style>
+</head>
+<body>
+<main id="app"></main>
+
+<script id="ramo-data" type="application/json">
+{
+ "para": "Para mi niña hermosa :3",
+ "titulo": "Feliz Día de las Flores Amarillas",
+ "subtitulo": "No es mucho, pero es trabajo honesto uwu",
+ "mensajes": [
+  "Hoy no solo se celebra el día de las flores amarillas, también hace poco cumplimos nuestros primeros 3 meses juntos y me siento muy feliz de haberlos compartido junto a ti.",
+  "Te doy gracias por aparecer en mi vida y compartirme tu paciencia y tu amor como solo tu lo sabes hacer, me has hecho una persona muy feliz y espero poder seguir cada día junto a ti.",
+  "Te amo mi niña hermosa, hoy, mañana y siempre <3",
+  "Espero con ansias el día en que pueda regalarte un ramo de flores en persona.",
+  "Adoro el tiempo que pasamos juntos, le diste un nuevo sentido a mi vida y lo que deseo para el futuro, gracias a ti pude encontrar un poco de paz."
+ ],
+ "firma": "Miau :3"
+}
+</script>
+
+<script id="ramo-js">
+(function () {
+  'use strict';
+
+  var FONTS = 'https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Nunito:wght@400;600;700&display=swap';
+  var PAGE_TITLE = 'Ramo de Flores Amarillas';
+  var EDIT_HASH = '#editar'; // en modo autónomo (sin claude.ai) el editor solo aparece con este hash en la URL
+  var N_FLORES = 5;
+  var POSICION = ['arriba', 'izquierda', 'derecha', 'abajo a la izquierda', 'abajo a la derecha'];
+  var DEFAULTS = {
+    para: '',
+    titulo: 'Feliz Día de las Flores Amarillas',
+    subtitulo: 'Un ramo de girasoles para ti',
+    mensajes: [
+      'Que este 21 de septiembre te encuentre floreciendo.',
+      'Eres luz, como estas flores amarillas.',
+      'Gracias por existir y por hacer mis días más bonitos.',
+      'Un ramo amarillo para recordarte que siempre pienso en ti.',
+      'Que nunca te falten razones para sonreír.'
+    ],
+    firma: 'Con cariño'
+  };
+
+  var hasHost = !!(window.claude && typeof window.claude.use === 'function');
+  var app = document.getElementById('app');
+  var data = readData();
+  var idx = 0;
+  var readOnly = false;
+  var els = {};
+
+  /* ---------- datos ---------- */
+  function readData() {
+    var d = null;
+    try {
+      var el = document.getElementById('ramo-data');
+      if (el) d = JSON.parse(el.textContent);
+    } catch (e) { d = null; }
+    return normalize(d);
+  }
+
+  function str(v, max) { return typeof v === 'string' ? v.trim().slice(0, max) : ''; }
+
+  function normalize(d) {
+    d = d && typeof d === 'object' ? d : {};
+    // Siempre un mensaje por girasol: si falta alguno, se usa el de ejemplo de esa posición.
+    var raw = Array.isArray(d.mensajes) ? d.mensajes : [];
+    var msgs = [];
+    for (var i = 0; i < N_FLORES; i++) msgs.push(str(raw[i], 400) || DEFAULTS.mensajes[i]);
+    return {
+      para: str(d.para, 60),
+      titulo: str(d.titulo, 80) || DEFAULTS.titulo,
+      subtitulo: ('subtitulo' in d) ? str(d.subtitulo, 120) : DEFAULTS.subtitulo,
+      mensajes: msgs,
+      firma: ('firma' in d) ? str(d.firma, 60) : DEFAULTS.firma
+    };
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ---------- dibujo del ramo ---------- */
+  function lcg(seed) {
+    var s = seed % 2147483647; if (s <= 0) s += 2147483646;
+    return function () { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+  }
+
+  function sunflower(cx, cy, r, i, delay) {
+    var rnd = lcg(i * 97 + 13);
+    var out = '';
+    function layer(n, len, w, off, fill, crease) {
+      for (var k = 0; k < n; k++) {
+        var L = len * (0.92 + rnd() * 0.14);
+        var a = off + k * (360 / n) + (rnd() - 0.5) * 4;
+        out += '<g transform="rotate(' + a.toFixed(1) + ')">' +
+          '<path d="M0 0 C ' + w + ' ' + (-L * 0.28).toFixed(1) + ' ' + w + ' ' + (-L * 0.68).toFixed(1) + ' 0 ' + (-L).toFixed(1) +
+          ' C ' + (-w) + ' ' + (-L * 0.68).toFixed(1) + ' ' + (-w) + ' ' + (-L * 0.28).toFixed(1) + ' 0 0Z" fill="' + fill + '"/>' +
+          (crease ? '<path class="crease" d="M0 ' + (-L * 0.12).toFixed(1) + ' L0 ' + (-L * 0.78).toFixed(1) + '"/>' : '') +
+          '</g>';
+      }
+    }
+    layer(17, r, (r * 0.16).toFixed(1), 10.6, 'url(#pDeep)', false);
+    layer(17, r * 0.86, (r * 0.15).toFixed(1), 0, 'url(#pLite)', true);
+    var dr = r * 0.37;
+    var seeds = '';
+    var N = 110;
+    for (var k = 0; k < N; k++) {
+      var ang = k * 2.39996;
+      var rad = dr * Math.sqrt(k / N) * 0.95;
+      var sz = (0.9 + (k / N) * 1.1) * r / 60;
+      seeds += '<circle cx="' + (Math.cos(ang) * rad).toFixed(1) + '" cy="' + (Math.sin(ang) * rad).toFixed(1) +
+        '" r="' + sz.toFixed(2) + '" fill="' + (k % 3 ? '#6B4423' : '#8A5A2B') + '" opacity=".85"/>';
+    }
+    var florets = '';
+    for (var f = 0; f < 26; f++) {
+      var fa = f * (Math.PI * 2 / 26);
+      florets += '<circle cx="' + (Math.cos(fa) * dr * 0.97).toFixed(1) + '" cy="' + (Math.sin(fa) * dr * 0.97).toFixed(1) +
+        '" r="' + (r / 36).toFixed(2) + '" fill="#F7C043" opacity=".9"/>';
+    }
+    return '<g transform="translate(' + cx + ' ' + cy + ')">' +
+      '<g class="bloom flower" data-i="' + i + '" style="--d:' + delay.toFixed(2) + 's" tabindex="0" role="button" aria-label="Abrir mensaje ' + (i + 1) + '">' +
+      out +
+      '<circle r="' + dr.toFixed(1) + '" fill="url(#disk)"/>' + seeds + florets +
+      '<circle r="' + dr.toFixed(1) + '" fill="none" stroke="#7A4A1D" stroke-width="1.5" opacity=".7"/>' +
+      '</g></g>';
+  }
+
+  function stem(x1, y1, x2, y2, delay) {
+    var mx = (x1 + x2) / 2 + (x2 - x1) * 0.15;
+    var my = (y1 + y2) / 2;
+    return '<path class="stem" d="M' + x1 + ' ' + y1 + ' Q ' + mx.toFixed(1) + ' ' + my.toFixed(1) + ' ' + x2 + ' ' + y2 +
+      '" pathLength="1" style="--d:' + delay.toFixed(2) + 's"/>';
+  }
+
+  function leaf(x, y, angle, scale, delay) {
+    return '<g transform="translate(' + x + ' ' + y + ') rotate(' + angle + ') scale(' + scale + ')">' +
+      '<g class="leafg" style="--d:' + delay.toFixed(2) + 's">' +
+      '<path class="leaf" d="M0 0 C 14 -16 38 -14 50 0 C 38 12 14 14 0 0Z"/>' +
+      '<path class="vein" d="M2 0 L46 0"/></g></g>';
+  }
+
+  function bouquetSVG() {
+    var F = [[202, 118, 58], [122, 190, 52], [284, 178, 54], [158, 262, 50], [250, 268, 50]];
+    var order = [1, 2, 0, 3, 4];
+    var base = [204, 372];
+    var stems = order.map(function (i, k) { return stem(base[0], base[1], F[i][0], F[i][1], 0.9 + k * 0.12); }).join('');
+    var leaves = [
+      leaf(157, 281, 196, 0.95, 1.7),
+      leaf(250, 275, -18, 0.95, 1.8),
+      leaf(100, 262, 208, 0.85, 1.9),
+      leaf(306, 250, -40, 0.85, 2.0)
+    ].join('');
+    var flowers = order.map(function (i, k) { return sunflower(F[i][0], F[i][1], F[i][2], i, 1.9 + k * 0.22); }).join('');
+    return '<svg viewBox="0 0 400 520" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Ramo de girasoles">' +
+      '<defs>' +
+      '<linearGradient id="pLite" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#E88B12"/><stop offset=".45" stop-color="#FFB61A"/><stop offset="1" stop-color="#FFDB5C"/></linearGradient>' +
+      '<linearGradient id="pDeep" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#C46A0C"/><stop offset=".5" stop-color="#E89A0F"/><stop offset="1" stop-color="#F7C043"/></linearGradient>' +
+      '<radialGradient id="disk" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#5E3B1E"/><stop offset=".6" stop-color="#3A2313"/><stop offset="1" stop-color="#221208"/></radialGradient>' +
+      '<linearGradient id="leafG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2F8F5B"/><stop offset="1" stop-color="#4CAF70"/></linearGradient>' +
+      '<linearGradient id="paperFront" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7E9D0"/><stop offset=".5" stop-color="#EAD3AE"/><stop offset="1" stop-color="#D9BC90"/></linearGradient>' +
+      '<linearGradient id="paperBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CDB18A"/><stop offset="1" stop-color="#B99A72"/></linearGradient>' +
+      '<filter id="soft" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="5"/></filter>' +
+      '</defs>' +
+      '<ellipse cx="206" cy="506" rx="96" ry="9" fill="#031614" opacity=".45" filter="url(#soft)"/>' +
+      '<path d="M 100 262 C 150 292 254 292 304 262 L 208 498 Z" fill="url(#paperBack)"/>' +
+      stems + leaves +
+      '<path d="M 110 288 C 150 318 254 318 300 288 L 208 500 Z" fill="#F0DDBE"/>' +
+      '<path d="M 84 300 C 140 336 262 336 318 300 L 208 500 Z" fill="url(#paperFront)"/>' +
+      '<path d="M 84 300 C 140 336 262 336 318 300" fill="none" stroke="#FFF8E9" stroke-width="2" opacity=".5"/>' +
+      '<path d="M 122 324 L 206 498" stroke="#B4926A" stroke-width="1.2" opacity=".5" fill="none"/>' +
+      '<path d="M 139 384 C 175 397 232 397 269 384 L 262 402 C 232 414 176 414 146 402 Z" fill="#E98A8A"/>' +
+      '<path d="M200 396 C 192 412 190 424 194 434 L 202 428 C 200 418 202 408 206 398 Z" fill="#E98A8A"/>' +
+      '<path d="M208 396 C 216 412 218 424 214 434 L 206 428 C 208 418 206 408 202 398 Z" fill="#E98A8A"/>' +
+      '<path d="M204 392 C 186 374 164 380 170 394 C 174 404 194 400 204 392 Z" fill="#F2A3A3" stroke="#D97676" stroke-width=".8"/>' +
+      '<path d="M204 392 C 222 374 244 380 238 394 C 234 404 214 400 204 392 Z" fill="#F2A3A3" stroke="#D97676" stroke-width=".8"/>' +
+      '<circle cx="204" cy="393" r="6" fill="#D97676"/>' +
+      flowers +
+      '</svg>';
+  }
+
+  function sparkles() {
+    var s = '';
+    for (var i = 0; i < 34; i++) {
+      var x = (Math.random() * 100).toFixed(1), y = (Math.random() * 100).toFixed(1);
+      var d = (2 + Math.random() * 3).toFixed(1), dl = (-Math.random() * 5).toFixed(1), sz = (2 + Math.random() * 2).toFixed(1);
+      s += '<i class="spark" style="left:' + x + '%;top:' + y + '%;width:' + sz + 'px;height:' + sz + 'px;--dur:' + d + 's;--dl:' + dl + 's"></i>';
+    }
+    return s;
+  }
+
+  function butterflies() {
+    var B = [
+      { x: 12, y: 22, dx: 40, dy: -30, dur: 9, s: 1 },
+      { x: 80, y: 16, dx: -50, dy: 40, dur: 11, s: .8 },
+      { x: 6, y: 62, dx: 60, dy: -60, dur: 13, s: .7 },
+      { x: 86, y: 56, dx: -40, dy: -50, dur: 10, s: .9 },
+      { x: 48, y: 6, dx: -60, dy: 30, dur: 12, s: .65 }
+    ];
+    return B.map(function (b, i) {
+      return '<svg class="bfly" viewBox="-20 -14 40 28" aria-hidden="true" style="left:' + b.x + '%;top:' + b.y + '%;--dx:' + b.dx + 'px;--dy:' + b.dy +
+        'px;--dur:' + b.dur + 's;--s:' + b.s + ';--dl:' + (3 + i * 0.3).toFixed(1) + 's;--fl:' + (0.42 + i * 0.05).toFixed(2) + 's">' +
+        '<g class="wing l"><path d="M0 0 C -6 -14 -20 -12 -18 -3 C -17 2 -9 3 -3 1 C -9 3 -17 4 -16 9 C -14 14 -4 10 0 0Z"/></g>' +
+        '<g class="wing r"><path d="M0 0 C 6 -14 20 -12 18 -3 C 17 2 9 3 3 1 C 9 3 17 4 16 9 C 14 14 4 10 0 0Z"/></g>' +
+        '<path class="body" d="M0 -5 L0 6"/></svg>';
+    }).join('');
+  }
+
+  /* ---------- render ---------- */
+  function render() {
+    app.innerHTML =
+      '<div class="sky" aria-hidden="true">' + sparkles() + '</div>' +
+      '<header class="head">' +
+      (data.para ? '<p class="eyebrow">' + esc(data.para) + '</p>' : '') +
+      '<h1 class="title">' + esc(data.titulo) + '</h1>' +
+      (data.subtitulo ? '<p class="sub">' + esc(data.subtitulo) + '</p>' : '') +
+      '</header>' +
+      '<div class="stage"><div class="bouquet">' + bouquetSVG() + '</div>' + butterflies() + '</div>' +
+      '<footer class="foot"><button type="button" class="btn-letter" id="openLetter">Abrir la carta</button></footer>' +
+      '<p class="toast" id="toast" role="status" hidden></p>' +
+      '<button type="button" class="edit-btn" id="editBtn" hidden aria-label="Editar los mensajes">' +
+      '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>' +
+      '</button>' +
+      '<div class="letter" id="letter" hidden role="dialog" aria-modal="true" aria-labelledby="letterCount">' +
+      '<div class="letter-backdrop" id="letterBackdrop"></div>' +
+      '<div class="card" id="card"><span class="tape" aria-hidden="true"></span>' +
+      '<p class="counter" id="letterCount"></p>' +
+      '<p class="msg" id="letterMsg"></p>' +
+      '<p class="sign" id="letterSign"></p>' +
+      '<div class="nav"><button type="button" class="nav-btn" id="prevMsg" aria-label="Mensaje anterior">&#8249;</button>' +
+      '<div class="dots" id="dots"></div>' +
+      '<button type="button" class="nav-btn" id="nextMsg" aria-label="Mensaje siguiente">&#8250;</button></div>' +
+      '<button type="button" class="close" id="closeLetter" aria-label="Cerrar la carta">&times;</button>' +
+      '</div></div>' +
+      '<div class="sheet" id="sheet" hidden>' +
+      '<form id="editForm" novalidate>' +
+      '<h2>Editar el ramo</h2>' +
+      '<label for="f-para">Dedicatoria <small>(opcional, va arriba del título)</small><input id="f-para" name="para" maxlength="60" autocomplete="off" placeholder="Para …"></label>' +
+      '<label for="f-titulo">Título<input id="f-titulo" name="titulo" maxlength="80" autocomplete="off"></label>' +
+      '<label for="f-sub">Subtítulo <small>(opcional)</small><input id="f-sub" name="subtitulo" maxlength="120" autocomplete="off"></label>' +
+      '<p class="hint">Cada girasol abre su propio mensaje. Los cinco se leen en orden en la carta.</p>' +
+      POSICION.map(function (pos, i) {
+        return '<label for="f-msg-' + i + '">Girasol ' + (i + 1) + ' <small>(' + pos + ')</small>' +
+          '<textarea id="f-msg-' + i + '" name="mensaje' + (i + 1) + '" rows="3" maxlength="400" class="msg-field"></textarea></label>';
+      }).join('') +
+      '<label for="f-firma">Firma <small>(opcional)</small><input id="f-firma" name="firma" maxlength="60" autocomplete="off"></label>' +
+      '<div class="row"><button type="submit" class="btn primary" id="saveBtn">Guardar</button><button type="button" class="btn" id="cancelEdit">Cancelar</button></div>' +
+      '<p class="status" id="status" aria-live="polite"></p>' +
+      '<p class="hint" id="hint"></p>' +
+      '</form></div>';
+
+    var ids = ['openLetter', 'editBtn', 'letter', 'letterBackdrop', 'card', 'letterCount', 'letterMsg', 'letterSign', 'prevMsg', 'nextMsg', 'dots',
+      'closeLetter', 'sheet', 'editForm', 'f-para', 'f-titulo', 'f-sub', 'f-firma', 'saveBtn', 'cancelEdit', 'status', 'hint'];
+    for (var i = 0; i < N_FLORES; i++) ids.push('f-msg-' + i);
+    ids.forEach(function (id) { els[id] = document.getElementById(id); });
+    els.dots.innerHTML = data.mensajes.map(function (_, i) {
+      return '<button type="button" class="dot" data-i="' + i + '" aria-label="Mensaje ' + (i + 1) + '"></button>';
+    }).join('');
+    bind();
+  }
+
+  /* ---------- carta ---------- */
+  function n() { return data.mensajes.length; }
+
+  function showMsg() {
+    els.letterMsg.textContent = data.mensajes[idx];
+    els.letterMsg.classList.toggle('long', data.mensajes[idx].length > 110);
+    els.letterCount.textContent = 'Girasol ' + (idx + 1) + ' de ' + n();
+    els.letterSign.textContent = data.firma;
+    els.letterSign.hidden = !data.firma;
+    Array.prototype.forEach.call(els.dots.children, function (d, i) { d.classList.toggle('on', i === idx); });
+    els.letterMsg.classList.remove('swap');
+    void els.letterMsg.offsetWidth;
+    els.letterMsg.classList.add('swap');
+  }
+
+  function openLetter(i) {
+    idx = ((i % n()) + n()) % n();
+    showMsg();
+    els.letter.hidden = false;
+    document.body.classList.add('modal-open');
+    els.closeLetter.focus();
+  }
+
+  function closeLetter() {
+    els.letter.hidden = true;
+    document.body.classList.remove('modal-open');
+    els.openLetter.focus();
+  }
+
+  function step(delta) { idx = ((idx + delta) % n() + n()) % n(); showMsg(); }
+
+  /* ---------- editor ---------- */
+  function openEditor() {
+    els['f-para'].value = data.para;
+    els['f-titulo'].value = data.titulo;
+    els['f-sub'].value = data.subtitulo;
+    for (var i = 0; i < N_FLORES; i++) els['f-msg-' + i].value = data.mensajes[i];
+    els['f-firma'].value = data.firma;
+    els.status.textContent = '';
+    els.hint.textContent = hasHost
+      ? 'Al guardar se publica una nueva versión de esta misma página: quien tenga el enlace verá los cambios.'
+      : 'Al guardar se descarga un index.html con los cambios; súbelo a tu hosting para publicarlos.';
+    els.sheet.hidden = false;
+    document.body.classList.add('modal-open');
+    els['f-titulo'].focus();
+  }
+
+  function closeEditor() {
+    els.sheet.hidden = true;
+    document.body.classList.remove('modal-open');
+    els.editBtn.focus();
+  }
+
+  // Devuelve los datos del formulario, o null si falta el mensaje de algún girasol.
+  function collect() {
+    var msgs = [];
+    for (var i = 0; i < N_FLORES; i++) {
+      var v = els['f-msg-' + i].value.trim();
+      if (!v) {
+        els.status.textContent = 'Falta el mensaje del girasol ' + (i + 1) + ' (' + POSICION[i] + ').';
+        els['f-msg-' + i].focus();
+        return null;
+      }
+      msgs.push(v);
+    }
+    return normalize({
+      para: els['f-para'].value,
+      titulo: els['f-titulo'].value,
+      subtitulo: els['f-sub'].value,
+      mensajes: msgs,
+      firma: els['f-firma'].value
+    });
+  }
+
+  function setBusy(b) { els.saveBtn.disabled = b; els.cancelEdit.disabled = b; }
+
+  function buildSource(next) {
+    var css = document.getElementById('ramo-css').textContent;
+    var js = document.getElementById('ramo-js').textContent;
+    var json = JSON.stringify(next, null, 1).replace(/<\//g, '<\\/');
+    return '<!doctype html>\n<html lang="es">\n<head>\n' +
+      '<meta charset="utf-8">\n' +
+      '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' +
+      '<title>' + esc(PAGE_TITLE) + '</title>\n' +
+      '<link rel="preconnect" href="https://fonts.googleapis.com">\n' +
+      '<link rel="stylesheet" href="' + FONTS + '">\n' +
+      '<style id="ramo-css">' + css + '</style>\n' +
+      '</head>\n<body>\n' +
+      '<main id="app"></main>\n' +
+      '<script id="ramo-data" type="application/json">\n' + json + '\n<\/script>\n' +
+      '<script id="ramo-js">' + js + '<\/script>\n' +
+      '</body>\n</html>\n';
+  }
+
+  // Modo autónomo: descarga un index.html con los cambios para volver a subirlo al hosting.
+  function saveStandalone(next) {
+    var html = buildSource(next);
+    var downloaded = false;
+    try {
+      var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'index.html';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
+      downloaded = true;
+    } catch (e) { downloaded = false; }
+    data = next;
+    closeEditor();
+    render();
+    lightUp();
+    toast(downloaded
+      ? 'Se descargó index.html con tus cambios. Súbelo a tu hosting para que todos los vean.'
+      : 'No se pudo descargar el archivo; los cambios solo se ven en esta pestaña.');
+  }
+
+  function toast(text) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = text;
+    t.hidden = false;
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(function () { t.hidden = true; }, 7000);
+  }
+
+  function markReadOnly() {
+    readOnly = true;
+    els.status.textContent = 'Esta vista es de solo lectura: aquí no se pueden guardar cambios.';
+    els.editBtn.hidden = true;
+  }
+
+  async function save(next) {
+    setBusy(true);
+    els.status.textContent = 'Guardando…';
+    var art = null;
+    if (hasHost) {
+      try { art = await window.claude.use('artifact'); } catch (e) { art = null; }
+    }
+    if (!art) {
+      setBusy(false);
+      saveStandalone(next);
+      return;
+    }
+    var html = buildSource(next);
+    var attempt = 0;
+    while (true) {
+      try {
+        await art.publish(html);
+        els.status.textContent = 'Guardado. La página se está actualizando…';
+        return;
+      } catch (err) {
+        var code = err && err.code;
+        if (code === 'upstream_error' && attempt === 0) {
+          attempt++;
+          await new Promise(function (r) { setTimeout(r, 800 + Math.random() * 700); });
+          continue;
+        }
+        setBusy(false);
+        if (code === 'conflict') {
+          els.status.textContent = 'Se publicó otra versión mientras editabas; la página se está actualizando.';
+        } else if (code === 'not_writer' || code === 'not_granted' || code === 'not_declared' || code === 'capability_disabled' || code === 'capability_removed' || code === 'consent_required') {
+          markReadOnly();
+        } else if (code === 'rate_limited') {
+          els.status.textContent = 'Demasiados guardados seguidos. Espera un momento e inténtalo de nuevo.';
+        } else if (code === 'too_large' || code === 'invalid_content' || code === 'transform_error') {
+          els.status.textContent = 'No se pudo guardar el contenido. Acorta los mensajes e inténtalo de nuevo.';
+        } else {
+          els.status.textContent = 'No se pudo guardar. Inténtalo de nuevo en un momento.';
+        }
+        return;
+      }
+    }
+  }
+
+  /* ---------- eventos ---------- */
+  function bind() {
+    els.openLetter.addEventListener('click', function () { openLetter(0); });
+    els.closeLetter.addEventListener('click', closeLetter);
+    els.letterBackdrop.addEventListener('click', closeLetter);
+    els.prevMsg.addEventListener('click', function () { step(-1); });
+    els.nextMsg.addEventListener('click', function () { step(1); });
+    els.dots.addEventListener('click', function (e) {
+      var d = e.target.closest('.dot');
+      if (d) { idx = +d.dataset.i; showMsg(); }
+    });
+
+    app.addEventListener('click', function (e) {
+      var f = e.target.closest('.flower');
+      if (f) openLetter(+f.dataset.i);
+    });
+    app.addEventListener('keydown', function (e) {
+      var f = e.target.closest && e.target.closest('.flower');
+      if (f && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openLetter(+f.dataset.i); }
+    });
+
+    var sx = null;
+    els.card.addEventListener('touchstart', function (e) { sx = e.changedTouches[0].clientX; }, { passive: true });
+    els.card.addEventListener('touchend', function (e) {
+      if (sx === null) return;
+      var dx = e.changedTouches[0].clientX - sx; sx = null;
+      if (dx > 40) step(-1); else if (dx < -40) step(1);
+    }, { passive: true });
+
+    els.editBtn.addEventListener('click', openEditor);
+    els.cancelEdit.addEventListener('click', closeEditor);
+    els.editForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (readOnly) return;
+      var next = collect();
+      if (next) save(next);
+    });
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (!els.letter || els.letter.hidden) {
+      if (e.key === 'Escape' && els.sheet && !els.sheet.hidden && !els.saveBtn.disabled) closeEditor();
+      return;
+    }
+    if (e.key === 'Escape') closeLetter();
+    else if (e.key === 'ArrowLeft') step(-1);
+    else if (e.key === 'ArrowRight') step(1);
+  });
+
+  /* ---------- capacidades del visor ---------- */
+  async function lightUp() {
+    if (readOnly) return;
+    if (!hasHost) { els.editBtn.hidden = location.hash !== EDIT_HASH; return; }
+    try {
+      var user = await window.claude.use('user');
+      var can = user ? await user.canEdit() : false;
+      if (can) els.editBtn.hidden = false;
+    } catch (e) { /* sin datos del visor: no se muestra el editor */ }
+  }
+
+  if (!hasHost) window.addEventListener('hashchange', lightUp);
+
+  render();
+  lightUp();
+})();
+</script>
+</body>
+</html>
